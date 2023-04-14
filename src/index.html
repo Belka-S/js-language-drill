@@ -4,36 +4,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Webpack</title>
-  <!-- <link rel="shortcut icon" href="favicon.png" type="image/x-icon"> -->
+  <!-- <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon"> -->
+  <title>LanguageDrill</title>
 </head>
 
 <body>
   <!-- Header -->
-  <section class="header">
-    <div class="container">
-      <div class="header__wrap">
-        <h2 class=" header__title">Header</h2>
-        <nav class="nav"></nav>
-      </div>
+  <section class="header container">
+    <div class="header__wrap">
+      <form class="upload">
+        <a class="youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer nofollow">
+          <svg width="76" height="32">
+            <use xlink:href="#youtube"></use>
+          </svg>
+        </a>
+        <input class="upload__url " type="input" name="video-url" id="video-url" placeholder="Insert URL...">
+        <input class="upload__sub visually-hidden" type="file" name="sub-file" id="sub-file">
+        <label class="upload__sub-label" for="sub-file">Upload SUB...</label>
+        <button class="upload__btn" type="submit">
+          <svg width="46" height="32">
+            <use xlink:href="#play"></use>
+          </svg>
+        </button>
+      </form>
+    </div>
     </div>
   </section>
-  <!-- main -->
   <main>
     <!-- Hero -->
-    <section class="hero hero--main">
-      <div class="container hero__container">
-        <h1 class=" hero__title">Hero</h1>
-        <div class="hero__wrap"></div>
+    <section class="hero container">
+      <div class="hero__wrap">
+        <div class="sub-output"></div>
+        <div id='video-player'></div>
+      </div>
       </div>
     </section>
   </main>
   <!--  Footer -->
-  <section class="footer">
-    <div class="container footer__container">
-      <h2 class=" footer__title">Footer</h2>
-    </div>
+  <section class="footer container">
+    <div class="footer__wrap"></div>
   </section>
+
+  <script src="./index.js" type="module"></script>
 </body>
 
 </html>

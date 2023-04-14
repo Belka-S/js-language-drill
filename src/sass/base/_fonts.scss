@@ -1,15 +1,27 @@
-// @import '.';
-@import './fonts/Montserrat-All.scss';
+// Oswald	      	400 500
 
-@import './fonts/Montserrat-Light.scss';
-@import './fonts/Montserrat-Regular.scss';
-@import './fonts/Montserrat-Medium.scss';
-@import './fonts/Montserrat-SemiBold.scss';
-@import './fonts/Montserrat-Bold.scss';
+// font-family: 'Oswald', sans-serif;
 
-@import './fonts/Roboto-All.scss';
+/* Oswald-400 Cyrillic, Latin*/
+@font-face {
+  font-family: 'Oswald';
+  src: url('../fonts/Oswald-Regular.eot');
+  src: local('Oswald Regular'), local('Oswald Regular'),
+    url('../fonts/Oswald-Regular.woff2') format('woff2'),
+    url('../fonts/Oswald-Regular.woff') format('woff'),
+    url('../fonts/Oswald-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
 
-@import './fonts/Roboto-Light.scss';
-@import './fonts/Roboto-Regular.scss';
-@import './fonts/Roboto-Medium.scss';
-@import './fonts/Roboto-Bold.scss';
+/* Oswald-500 Cyrillic, Latin*/
+@font-face {
+  font-family: 'Oswald';
+  src: url('../fonts/Oswald-Medium.eot');
+  src: local('Oswald Medium'), local('Oswald Medium'),
+    url('../fonts/Oswald-Medium.woff2') format('woff2'),
+    url('../fonts/Oswald-Medium.woff') format('woff'),
+    url('../fonts/Oswald-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
