@@ -53,7 +53,6 @@
   // Play icon
   &__btn {
     display: flex;
-    align-items: center;
     background-color: transparent;
     border: none;
     transition: transform 250ms;
@@ -63,7 +62,7 @@
       color: black;
       font-family: 'Oswald', sans-serif;
       font-weight: 500;
-      font-size: 22px;
+      font-size: 23px;
     }
 
     &:hover,
