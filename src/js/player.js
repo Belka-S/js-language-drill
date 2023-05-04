@@ -3,22 +3,29 @@ import urlParser from 'js-video-url-parser';
 
 import { refs } from './refs';
 
+// YouTube Player
+
+let player = null;
+
 export function createPlayer(e) {
   e.preventDefault();
+
+  addEventListener('keydown', playPause);
 
   const prevPlayer = document.querySelector('iframe#video-player');
   if (prevPlayer) {
     prevPlayer.insertAdjacentHTML('afterend', '<div id="video-player"></div>');
     prevPlayer.remove();
+    removeEventListener('keydown', playPause);
   }
 
   const videoUrl = refs.urlInput.value;
   const params = urlParser.parse(videoUrl);
 
-  const player = YouTubePlayer('video-player', {
+  player = YouTubePlayer('video-player', {
     playerVars: { modestbranding: 1, enablejsapi: 1 },
   });
-  player.setPlaybackRate(0.75);
+  // player.setPlaybackRate(0.75);
   player.loadVideoById(params.id);
   // EventListener
   const listener = player.on('stateChange', e => {
@@ -35,4 +42,16 @@ export function createPlayer(e) {
       player.off(listener);
     }
   });
+}
+
+function playPause(e) {
+  e.preventDefault();
+
+  if (e.code === 'Space') {
+    player.getPlayerState().then(resp => (resp === 1 ? player.pauseVideo() : player.playVideo()));
+  }
+
+  if (e.code === 'MetaLeft') {
+    player.getCurrentTime().then(resp => player.seekTo(resp - 10));
+  }
 }

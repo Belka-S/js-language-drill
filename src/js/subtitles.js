@@ -2,7 +2,9 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import { refs } from './refs';
 
+// Get Subtitles from Url
 export function getSub(e) {
+  localStorage.setItem('URL', JSON.stringify(e.target.value));
   const url = e.target.value.replace('https://', 'https://subtitle.to/');
   window.open(url);
   const labelEl = refs.urlInput.nextElementSibling;
@@ -10,19 +12,27 @@ export function getSub(e) {
   e.target.blur();
 }
 
-export function uploadSub(e) {
-  const fileObj = e.target.files[0];
-  if (fileObj.size > 100000) {
-    const message = 'Ooops... Seems to wrong SUB!';
-    const options = { position: 'center-center', timeout: 3000 };
-    Notify.failure(message, options);
-    return;
-  }
+// Upload from Local Storage
+export function uploadLocal() {
+  const URL = localStorage.getItem('URL');
+  const SUB = localStorage.getItem('SUB');
+  if (!URL || !SUB) return;
 
+  refs.urlInput.value = JSON.parse(URL);
+  refs.subInput.nextElementSibling.textContent = JSON.parse(SUB)[0];
+  const subEl = `<p>${JSON.parse(SUB)[1]}</p>`;
+  refs.subOutput.insertAdjacentHTML('beforeend', subEl);
+}
+
+// Upload Subtitles from File
+export function uploadSub(e) {
   const reader = new FileReader();
-  reader.readAsText(fileObj, 'utf-8');
+  const fileObj = e.target.files[0];
+
+  fileObj.size > 100000 ? wrongSubtitles() : reader.readAsText(fileObj, 'utf-8');
 
   reader.onload = () => {
+    localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
     let subEl = refs.subOutput.querySelector('p');
 
     if (subEl) {
@@ -37,8 +47,14 @@ export function uploadSub(e) {
   refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
 }
 
-export const cleanUrlLabel = e => (e.target.value = '');
+// Nitifications
+function wrongSubtitles() {
+  const message = 'Ooops... Seems to wrong SUB!';
+  const options = { position: 'center-center', timeout: 3000 };
+  return Notify.failure(message, options);
+}
 
+// Subtitles Input Label
 export function fillSubLabel(e) {
   const labelEl = e.target.nextElementSibling;
   labelEl.textContent = '.';
@@ -54,5 +70,7 @@ export function fillSubLabel(e) {
     e.target.blur();
   }, 1550);
 }
+
+export const cleanUrlLabel = e => (e.target.value = '');
 
 // function normalizeText(text) {}
