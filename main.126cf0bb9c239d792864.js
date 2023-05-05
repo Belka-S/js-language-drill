@@ -49,27 +49,35 @@ var notiflix_notify_aio = __webpack_require__(678);
 ;// CONCATENATED MODULE: ./src/js/subtitles.js
 
 
+
+// Get Subtitles from Url
 function getSub(e) {
+  localStorage.setItem('URL', JSON.stringify(e.target.value));
   var url = e.target.value.replace('https://', 'https://subtitle.to/');
   window.open(url);
   var labelEl = refs.urlInput.nextElementSibling;
   labelEl.textContent = e.target.value;
   e.target.blur();
 }
+
+// Upload from Local Storage
+function uploadLocal() {
+  var URL = localStorage.getItem('URL');
+  var SUB = localStorage.getItem('SUB');
+  if (!URL || !SUB) return;
+  refs.urlInput.value = JSON.parse(URL);
+  refs.subInput.nextElementSibling.textContent = JSON.parse(SUB)[0];
+  var subEl = "<p>".concat(JSON.parse(SUB)[1], "</p>");
+  refs.subOutput.insertAdjacentHTML('beforeend', subEl);
+}
+
+// Upload Subtitles from File
 function uploadSub(e) {
-  var fileObj = e.target.files[0];
-  if (fileObj.size > 100000) {
-    var message = 'Ooops... Seems to wrong SUB!';
-    var options = {
-      position: 'center-center',
-      timeout: 3000
-    };
-    notiflix_notify_aio.Notify.failure(message, options);
-    return;
-  }
   var reader = new FileReader();
-  reader.readAsText(fileObj, 'utf-8');
+  var fileObj = e.target.files[0];
+  fileObj.size > 100000 ? wrongSubtitles() : reader.readAsText(fileObj, 'utf-8');
   reader.onload = function () {
+    localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
     var subEl = refs.subOutput.querySelector('p');
     if (subEl) {
       subEl.innerHTML = reader.result;
@@ -83,9 +91,18 @@ function uploadSub(e) {
   };
   refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
 }
-var cleanUrlLabel = function cleanUrlLabel(e) {
-  return e.target.value = '';
-};
+
+// Nitifications
+function wrongSubtitles() {
+  var message = 'Ooops... Seems to wrong SUB!';
+  var options = {
+    position: 'center-center',
+    timeout: 3000
+  };
+  return notiflix_notify_aio.Notify.failure(message, options);
+}
+
+// Subtitles Input Label
 function fillSubLabel(e) {
   var labelEl = e.target.nextElementSibling;
   labelEl.textContent = '.';
@@ -103,6 +120,9 @@ function fillSubLabel(e) {
     e.target.blur();
   }, 1550);
 }
+var cleanUrlLabel = function cleanUrlLabel(e) {
+  return e.target.value = '';
+};
 
 // function normalizeText(text) {}
 // EXTERNAL MODULE: ./node_modules/youtube-player/dist/index.js
@@ -115,22 +135,28 @@ var jsVideoUrlParser_default = /*#__PURE__*/__webpack_require__.n(jsVideoUrlPars
 
 
 
+
+// YouTube Player
+
+var player = null;
 function createPlayer(e) {
   e.preventDefault();
+  addEventListener('keydown', playPause);
   var prevPlayer = document.querySelector('iframe#video-player');
   if (prevPlayer) {
     prevPlayer.insertAdjacentHTML('afterend', '<div id="video-player"></div>');
     prevPlayer.remove();
+    removeEventListener('keydown', playPause);
   }
   var videoUrl = refs.urlInput.value;
   var params = jsVideoUrlParser_default().parse(videoUrl);
-  var player = dist_default()('video-player', {
+  player = dist_default()('video-player', {
     playerVars: {
       modestbranding: 1,
       enablejsapi: 1
     }
   });
-  player.setPlaybackRate(0.75);
+  // player.setPlaybackRate(0.75);
   player.loadVideoById(params.id);
   // EventListener
   var listener = player.on('stateChange', function (e) {
@@ -146,7 +172,21 @@ function createPlayer(e) {
     }
   });
 }
+function playPause(e) {
+  e.preventDefault();
+  if (e.code === 'Space') {
+    player.getPlayerState().then(function (resp) {
+      return resp === 1 ? player.pauseVideo() : player.playVideo();
+    });
+  }
+  if (e.code === 'MetaLeft') {
+    player.getCurrentTime().then(function (resp) {
+      return player.seekTo(resp - 10);
+    });
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.js
+
 
 
 
@@ -160,6 +200,7 @@ refs.urlInput.addEventListener('input', (0,debounce.debounce)(getSub, 300));
 refs.urlInput.addEventListener('click', cleanUrlLabel);
 
 // Upload Sub
+uploadLocal();
 refs.subInput.addEventListener('input', uploadSub);
 refs.subInput.addEventListener('focus', fillSubLabel);
 
@@ -167,6 +208,12 @@ refs.subInput.addEventListener('focus', fillSubLabel);
 refs.uploadForm.addEventListener('submit', createPlayer);
 
 // new
+// addEventListener('keydown', playPause);
+
+// function playPause(e) {
+//   e.preventDefault();
+//   e.code === 'Space' && console.log(e.code);
+// }
 
 /***/ })
 

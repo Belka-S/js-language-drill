@@ -3,7 +3,8 @@ import './sass/index.scss';
 import './img/play.svg';
 import './img/youtube.svg';
 import { refs } from './js/refs';
-import { getSub, uploadSub, cleanUrlLabel, fillSubLabel } from './js/subtitles';
+import { getSub, uploadLocal, uploadSub } from './js/subtitles';
+import { cleanUrlLabel, fillSubLabel } from './js/subtitles';
 import { createPlayer } from './js/player';
 
 // Get Sub
@@ -11,6 +12,7 @@ refs.urlInput.addEventListener('input', debounce(getSub, 300));
 refs.urlInput.addEventListener('click', cleanUrlLabel);
 
 // Upload Sub
+uploadLocal();
 refs.subInput.addEventListener('input', uploadSub);
 refs.subInput.addEventListener('focus', fillSubLabel);
 
@@ -18,3 +20,9 @@ refs.subInput.addEventListener('focus', fillSubLabel);
 refs.uploadForm.addEventListener('submit', createPlayer);
 
 // new
+// addEventListener('keydown', playPause);
+
+// function playPause(e) {
+//   e.preventDefault();
+//   e.code === 'Space' && console.log(e.code);
+// }
