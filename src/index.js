@@ -21,10 +21,4 @@ refs.subInput.addEventListener('focus', fillSubLabel);
 // Play Video
 refs.uploadForm.addEventListener('submit', createPlayer);
 
-// new
-// addEventListener('keydown', playPause);
-
-// function playPause(e) {
-//   e.preventDefault();
-//   e.code === 'Space' && console.log(e.code);
-// }
+// New

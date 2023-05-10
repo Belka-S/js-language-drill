@@ -73,4 +73,41 @@ export function fillSubLabel(e) {
 
 export const cleanUrlLabel = e => (e.target.value = '');
 
-// function normalizeText(text) {}
+// Normalize SUB
+import { SUB } from './data';
+
+const subArray = SUB.split('-->');
+const index = subArray[1].indexOf('\n\n');
+const cut = subArray[1].slice(0, index);
+
+function normalizeSub(sub) {
+  const splitReplace = sub.split('\n\n').map((el, i) => el.replace(`${i + 1}\n`, ''));
+  const removeEndTime = splitReplace.map(el => el.replace(el.substring(8, 30), ' '));
+  const objectArray = removeEndTime.map(el => ({ time: el.substring(0, 8), sub: el.substring(9) }));
+
+  const joinSentences = [];
+  let time = '';
+  let sentence = '';
+
+  for (let i = 0; i < objectArray.length; i += 1) {
+    const elTime = objectArray[i].time;
+    const elSub = objectArray[i].sub;
+    time += elTime;
+    sentence += ' ' + elSub;
+
+    if (
+      (elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) &&
+      sentence.length > 80
+    ) {
+      joinSentences.push({ time, sentence });
+      time = '';
+      sentence = '';
+    }
+  }
+
+  const normSUB = joinSentences.map(el => ({ time: el.time.substring(0, 8), sub: el.sentence }));
+
+  return normSUB;
+}
+
+console.dir(normalizeSub(SUB));
