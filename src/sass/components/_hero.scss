@@ -13,6 +13,15 @@
   font-size: 24px;
 }
 
+.time {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  font-size: 16px;
+  line-height: 1;
+  color: gray;
+}
+
 .srt {
   &::first-letter {
     margin-left: 30px;

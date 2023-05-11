@@ -26,8 +26,13 @@ export function createPlayer(e) {
     playerVars: { modestbranding: 1, enablejsapi: 1 },
   });
   // player.setPlaybackRate(0.75);
-  player.loadVideoById(params.id);
-  // EventListener
+
+  player.loadVideoById({
+    videoId: params.id,
+    startSeconds: JSON.parse(localStorage.getItem('TIME')),
+  });
+
+  // Event Listener
   const listener = player.on('stateChange', e => {
     if (e.target.videoTitle && e.data === 1) {
       let titleEl = refs.subOutput.querySelector('h2');
@@ -42,6 +47,9 @@ export function createPlayer(e) {
       player.off(listener);
     }
   });
+
+  // time
+  // setInterval(() => player.getCurrentTime().then(resp => console.log(Math.round(resp))), 1000);
 }
 
 function playPause(e) {
@@ -49,6 +57,7 @@ function playPause(e) {
 
   if (e.code === 'Space') {
     player.getPlayerState().then(resp => (resp === 1 ? player.pauseVideo() : player.playVideo()));
+    player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));
   }
 
   if (e.code === 'MetaLeft') {

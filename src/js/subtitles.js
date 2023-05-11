@@ -4,6 +4,7 @@ import { refs } from './refs';
 
 // Get Subtitles from Url
 export function getSub(e) {
+  localStorage.setItem('TIME', 0);
   localStorage.setItem('URL', JSON.stringify(e.target.value));
   const url = e.target.value.replace('https://', 'https://subtitle.to/');
   window.open(url);
@@ -26,9 +27,10 @@ export function uploadLocal() {
 
 // Upload Subtitles from File
 export function uploadSub(e) {
+  refs.subOutput.innerHTML = '';
+
   const reader = new FileReader();
   const fileObj = e.target.files[0];
-
   fileObj.size > 100000 ? wrongSubtitles() : reader.readAsText(fileObj, 'utf-8');
 
   // Uploading sub.TXT
@@ -53,15 +55,18 @@ export function uploadSub(e) {
   if (fileObj.type !== 'text/plain') {
     reader.onload = () => {
       const srtArray = normalizeSub(reader.result);
-      const srtString = srtArray.reduce((acc, el) => acc + `<p class='srt'>${el.sub}</p>`, '');
+      const srtString = srtArray.reduce(
+        (acc, el) => acc + `<div class='time'>${el.time}</div><p class='srt'>${el.sub}</p>`,
+        '',
+      );
 
       localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, srtString]));
-      let subEl = refs.subOutput.querySelector('p');
+      let subEl = refs.subOutput.querySelector('div');
 
       if (subEl) {
         subEl.innerHTML = srtString;
       } else {
-        subEl = `<p>${srtString}</p>`;
+        subEl = `<div>${srtString}</div>`;
         refs.subOutput.insertAdjacentHTML('beforeend', subEl);
       }
     };
@@ -127,5 +132,3 @@ function normalizeSub(sub) {
 
   return normSUB;
 }
-// import { SUB } from './data';
-// console.dir(normalizeSub(SUB));
