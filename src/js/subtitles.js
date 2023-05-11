@@ -31,23 +31,47 @@ export function uploadSub(e) {
 
   fileObj.size > 100000 ? wrongSubtitles() : reader.readAsText(fileObj, 'utf-8');
 
-  reader.onload = () => {
-    localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
-    let subEl = refs.subOutput.querySelector('p');
+  // Uploading sub.TXT
+  if (fileObj.type === 'text/plain') {
+    reader.onload = () => {
+      localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
+      let subEl = refs.subOutput.querySelector('p');
 
-    if (subEl) {
-      subEl.innerHTML = reader.result;
-    } else {
-      subEl = `<p>${reader.result}</p>`;
-      refs.subOutput.insertAdjacentHTML('beforeend', subEl);
-    }
-  };
-  reader.onerror = () => console.log(reader.error);
+      if (subEl) {
+        subEl.innerHTML = reader.result;
+      } else {
+        subEl = `<p>${reader.result}</p>`;
+        refs.subOutput.insertAdjacentHTML('beforeend', subEl);
+      }
+    };
+    reader.onerror = () => console.log(reader.error);
 
-  refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
+    refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
+  }
+
+  // Uploading sub.SRT
+  if (fileObj.type !== 'text/plain') {
+    reader.onload = () => {
+      const srtArray = normalizeSub(reader.result);
+      const srtString = srtArray.reduce((acc, el) => acc + `<p class='srt'>${el.sub}</p>`, '');
+
+      localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, srtString]));
+      let subEl = refs.subOutput.querySelector('p');
+
+      if (subEl) {
+        subEl.innerHTML = srtString;
+      } else {
+        subEl = `<p>${srtString}</p>`;
+        refs.subOutput.insertAdjacentHTML('beforeend', subEl);
+      }
+    };
+    reader.onerror = () => console.log(reader.error);
+
+    refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
+  }
 }
 
-// Nitifications
+// Nitification Sub
 function wrongSubtitles() {
   const message = 'Ooops... Seems to wrong SUB!';
   const options = { position: 'center-center', timeout: 3000 };
@@ -74,12 +98,6 @@ export function fillSubLabel(e) {
 export const cleanUrlLabel = e => (e.target.value = '');
 
 // Normalize SUB
-import { SUB } from './data';
-
-const subArray = SUB.split('-->');
-const index = subArray[1].indexOf('\n\n');
-const cut = subArray[1].slice(0, index);
-
 function normalizeSub(sub) {
   const splitReplace = sub.split('\n\n').map((el, i) => el.replace(`${i + 1}\n`, ''));
   const removeEndTime = splitReplace.map(el => el.replace(el.substring(8, 30), ' '));
@@ -109,5 +127,5 @@ function normalizeSub(sub) {
 
   return normSUB;
 }
-
-console.dir(normalizeSub(SUB));
+// import { SUB } from './data';
+// console.dir(normalizeSub(SUB));

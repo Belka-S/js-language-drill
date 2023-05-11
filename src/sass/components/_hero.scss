@@ -13,6 +13,13 @@
   font-size: 24px;
 }
 
+.srt {
+  &::first-letter {
+    margin-left: 30px;
+    color: #cd201f;
+  }
+}
+
 #video-player {
   width: calc(50% - 15px);
 
