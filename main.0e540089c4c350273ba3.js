@@ -52,6 +52,7 @@ var notiflix_notify_aio = __webpack_require__(678);
 
 // Get Subtitles from Url
 function getSub(e) {
+  localStorage.setItem('TIME', 0);
   localStorage.setItem('URL', JSON.stringify(e.target.value));
   var url = e.target.value.replace('https://', 'https://subtitle.to/');
   window.open(url);
@@ -73,26 +74,53 @@ function uploadLocal() {
 
 // Upload Subtitles from File
 function uploadSub(e) {
+  refs.subOutput.innerHTML = '';
   var reader = new FileReader();
   var fileObj = e.target.files[0];
   fileObj.size > 100000 ? wrongSubtitles() : reader.readAsText(fileObj, 'utf-8');
-  reader.onload = function () {
-    localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
-    var subEl = refs.subOutput.querySelector('p');
-    if (subEl) {
-      subEl.innerHTML = reader.result;
-    } else {
-      subEl = "<p>".concat(reader.result, "</p>");
-      refs.subOutput.insertAdjacentHTML('beforeend', subEl);
-    }
-  };
-  reader.onerror = function () {
-    return console.log(reader.error);
-  };
-  refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
+
+  // Uploading sub.TXT
+  if (fileObj.type === 'text/plain') {
+    reader.onload = function () {
+      localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
+      var subEl = refs.subOutput.querySelector('p');
+      if (subEl) {
+        subEl.innerHTML = reader.result;
+      } else {
+        subEl = "<p>".concat(reader.result, "</p>");
+        refs.subOutput.insertAdjacentHTML('beforeend', subEl);
+      }
+    };
+    reader.onerror = function () {
+      return console.log(reader.error);
+    };
+    refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
+  }
+
+  // Uploading sub.SRT
+  if (fileObj.type !== 'text/plain') {
+    reader.onload = function () {
+      var srtArray = normalizeSub(reader.result);
+      var srtString = srtArray.reduce(function (acc, el) {
+        return acc + "<div class='time'>".concat(el.time, "</div><p class='srt'>").concat(el.sub, "</p>");
+      }, '');
+      localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, srtString]));
+      var subEl = refs.subOutput.querySelector('div');
+      if (subEl) {
+        subEl.innerHTML = srtString;
+      } else {
+        subEl = "<div>".concat(srtString, "</div>");
+        refs.subOutput.insertAdjacentHTML('beforeend', subEl);
+      }
+    };
+    reader.onerror = function () {
+      return console.log(reader.error);
+    };
+    refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
+  }
 }
 
-// Nitifications
+// Nitification Sub
 function wrongSubtitles() {
   var message = 'Ooops... Seems to wrong SUB!';
   var options = {
@@ -124,7 +152,45 @@ var cleanUrlLabel = function cleanUrlLabel(e) {
   return e.target.value = '';
 };
 
-// function normalizeText(text) {}
+// Normalize SUB
+function normalizeSub(sub) {
+  var splitReplace = sub.split('\n\n').map(function (el, i) {
+    return el.replace("".concat(i + 1, "\n"), '');
+  });
+  var removeEndTime = splitReplace.map(function (el) {
+    return el.replace(el.substring(8, 30), ' ');
+  });
+  var objectArray = removeEndTime.map(function (el) {
+    return {
+      time: el.substring(0, 8),
+      sub: el.substring(9)
+    };
+  });
+  var joinSentences = [];
+  var time = '';
+  var sentence = '';
+  for (var i = 0; i < objectArray.length; i += 1) {
+    var elTime = objectArray[i].time;
+    var elSub = objectArray[i].sub;
+    time += elTime;
+    sentence += ' ' + elSub;
+    if ((elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) && sentence.length > 80) {
+      joinSentences.push({
+        time: time,
+        sentence: sentence
+      });
+      time = '';
+      sentence = '';
+    }
+  }
+  var normSUB = joinSentences.map(function (el) {
+    return {
+      time: el.time.substring(0, 8),
+      sub: el.sentence
+    };
+  });
+  return normSUB;
+}
 // EXTERNAL MODULE: ./node_modules/youtube-player/dist/index.js
 var dist = __webpack_require__(62);
 var dist_default = /*#__PURE__*/__webpack_require__.n(dist);
@@ -157,8 +223,13 @@ function createPlayer(e) {
     }
   });
   // player.setPlaybackRate(0.75);
-  player.loadVideoById(params.id);
-  // EventListener
+
+  player.loadVideoById({
+    videoId: params.id,
+    startSeconds: JSON.parse(localStorage.getItem('TIME'))
+  });
+
+  // Event Listener
   var listener = player.on('stateChange', function (e) {
     if (e.target.videoTitle && e.data === 1) {
       var titleEl = refs.subOutput.querySelector('h2');
@@ -171,12 +242,19 @@ function createPlayer(e) {
       player.off(listener);
     }
   });
+
+  // time
+  // setInterval(() => player.getCurrentTime().then(resp => console.log(Math.round(resp))), 1000);
 }
+
 function playPause(e) {
   e.preventDefault();
   if (e.code === 'Space') {
     player.getPlayerState().then(function (resp) {
       return resp === 1 ? player.pauseVideo() : player.playVideo();
+    });
+    player.getCurrentTime().then(function (resp) {
+      return localStorage.setItem('TIME', JSON.stringify(resp));
     });
   }
   if (e.code === 'MetaLeft') {
@@ -207,13 +285,7 @@ refs.subInput.addEventListener('focus', fillSubLabel);
 // Play Video
 refs.uploadForm.addEventListener('submit', createPlayer);
 
-// new
-// addEventListener('keydown', playPause);
-
-// function playPause(e) {
-//   e.preventDefault();
-//   e.code === 'Space' && console.log(e.code);
-// }
+// New
 
 /***/ })
 
