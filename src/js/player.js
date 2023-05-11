@@ -1,11 +1,14 @@
 import YouTubePlayer from 'youtube-player';
 import urlParser from 'js-video-url-parser';
+import TimeFormat from 'hh-mm-ss';
 
 import { refs } from './refs';
 
 // YouTube Player
 
 let player = null;
+let intervalId = null;
+let currentTime = null;
 
 export function createPlayer(e) {
   e.preventDefault();
@@ -34,6 +37,7 @@ export function createPlayer(e) {
 
   // Event Listener
   const listener = player.on('stateChange', e => {
+    // Render Video Title
     if (e.target.videoTitle && e.data === 1) {
       let titleEl = refs.subOutput.querySelector('h2');
 
@@ -48,16 +52,31 @@ export function createPlayer(e) {
     }
   });
 
-  // time
-  // setInterval(() => player.getCurrentTime().then(resp => console.log(Math.round(resp))), 1000);
+  //SetInterval  -->  // intervalId = setInterval(() => player.getCurrentTime().then(resp => console.log(TimeFormat.fromS(Math.round(resp), 'hh:mm:ss'))), 1000,);
+  intervalId = setInterval(async () => {
+    currentTime = TimeFormat.fromS(Math.round(await player.getCurrentTime()), 'hh:mm:ss');
+    console.log(currentTime); // Set class on SUB
+  }, 1000);
 }
 
-function playPause(e) {
+async function playPause(e) {
   e.preventDefault();
 
   if (e.code === 'Space') {
+    // Play / Pause
     player.getPlayerState().then(resp => (resp === 1 ? player.pauseVideo() : player.playVideo()));
+    // Add to LS Current Time
     player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));
+    // Set / Remove Interval
+    const resp = await player.getPlayerState();
+    if (resp === 1) {
+      clearInterval(intervalId);
+    } else {
+      intervalId = setInterval(async () => {
+        currentTime = TimeFormat.fromS(Math.round(await player.getCurrentTime()), 'hh:mm:ss');
+        console.log(currentTime); // set class on SUB
+      }, 1000);
+    }
   }
 
   if (e.code === 'MetaLeft') {
