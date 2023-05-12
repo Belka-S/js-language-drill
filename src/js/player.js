@@ -80,7 +80,7 @@ async function onPlay() {
     }
     // Add to LS Current Time
     player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));
-    // Stop at the End
+    // Stop in the End
     const resp = await player.getPlayerState();
     if (resp === 0) {
       clearInterval(intervalId);
