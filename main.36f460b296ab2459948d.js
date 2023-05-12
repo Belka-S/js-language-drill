@@ -214,12 +214,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var player = null;
 function createPlayer(e) {
   e.preventDefault();
-  addEventListener('keydown', playPause);
+  addEventListener('keydown', getKeyAction);
   var prevPlayer = document.querySelector('iframe#video-player');
   if (prevPlayer) {
     prevPlayer.insertAdjacentHTML('afterend', '<div id="video-player"></div>');
     prevPlayer.remove();
-    removeEventListener('keydown', playPause);
+    removeEventListener('keydown', getKeyAction);
   }
   var videoUrl = refs.urlInput.value;
   var params = jsVideoUrlParser_default().parse(videoUrl);
@@ -251,10 +251,12 @@ function createPlayer(e) {
   // Find Time-Element
   onPlay();
 }
-function playPause(e) {
-  e.preventDefault();
+
+// Get Key Action
+function getKeyAction(e) {
   if (e.code === 'Space') {
-    // Play / Pause
+    e.preventDefault();
+    // Play/Pause
     player.getPlayerState().then(function (resp) {
       return resp === 1 ? player.pauseVideo() : player.playVideo();
     });
@@ -263,9 +265,34 @@ function playPause(e) {
       return resp === 1 ? clearInterval(intervalId) : onPlay();
     });
   }
-  if (e.code === 'MetaLeft') {
+  // Rewind Back
+  if (e.code === 'ArrowLeft') {
+    e.preventDefault();
     player.getCurrentTime().then(function (resp) {
       return player.seekTo(resp - 10);
+    });
+  }
+  // Rewind Forward
+  if (e.code === 'ArrowRight') {
+    e.preventDefault();
+    player.getCurrentTime().then(function (resp) {
+      return player.seekTo(resp + 10);
+    });
+  }
+  // Scroll to the Beginning
+  if (e.code === 'ArrowUp') {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+  // Scroll PageDown
+  if (e.code === 'ArrowDown') {
+    e.preventDefault();
+    window.scrollTo({
+      top: window.pageYOffset + window.innerHeight,
+      behavior: 'smooth'
     });
   }
 }
@@ -298,7 +325,10 @@ function _onPlay() {
                     return el.textContent === currentTime;
                   });
                   if (((_timeEl$ = timeEl[0]) === null || _timeEl$ === void 0 ? void 0 : _timeEl$.textContent) === currentTime) {
-                    timeEl[0].previousElementSibling.classList.remove('active');
+                    // timeEl[0].previousElementSibling.classList.remove('active');
+                    timeElArray.forEach(function (el) {
+                      return el.previousElementSibling.classList.remove('active');
+                    });
                     timeEl[0].nextElementSibling.classList.add('active');
                     timeElPositionY = window.pageYOffset + timeEl[0].getBoundingClientRect().y;
                     window.scrollTo({
