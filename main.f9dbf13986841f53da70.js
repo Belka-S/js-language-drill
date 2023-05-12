@@ -174,7 +174,7 @@ function normalizeSub(sub) {
     var elSub = objectArray[i].sub;
     time += elTime;
     sentence += ' ' + elSub;
-    if ((elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) && sentence.length > 80) {
+    if ((elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) && sentence.length > 20) {
       joinSentences.push({
         time: time,
         sentence: sentence
@@ -325,14 +325,17 @@ function _onPlay() {
                     return el.textContent === currentTime;
                   });
                   if (((_timeEl$ = timeEl[0]) === null || _timeEl$ === void 0 ? void 0 : _timeEl$.textContent) === currentTime) {
-                    // timeEl[0].previousElementSibling.classList.remove('active');
                     timeElArray.forEach(function (el) {
                       return el.previousElementSibling.classList.remove('active');
                     });
-                    timeEl[0].nextElementSibling.classList.add('active');
+                    timeElArray.forEach(function (el) {
+                      return el.previousElementSibling.classList.remove('current');
+                    });
+                    timeEl[0].previousElementSibling.classList.add('active');
+                    timeEl[0].nextElementSibling.classList.add('current');
                     timeElPositionY = window.pageYOffset + timeEl[0].getBoundingClientRect().y;
                     window.scrollTo({
-                      top: timeElPositionY - window.innerHeight * 0.25,
+                      top: timeElPositionY - window.innerHeight * 0.4,
                       behavior: 'smooth'
                     });
                   }
