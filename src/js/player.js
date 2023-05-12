@@ -89,7 +89,8 @@ async function onPlay() {
     // Find Time-Element
     const timeEl = timeElArray.filter(el => el.textContent === currentTime);
     if (timeEl[0]?.textContent === currentTime) {
-      timeEl[0].previousElementSibling.classList.remove('active');
+      // timeEl[0].previousElementSibling.classList.remove('active');
+      timeElArray.forEach(el => el.previousElementSibling.classList.remove('active'));
       timeEl[0].nextElementSibling.classList.add('active');
       const timeElPositionY = window.pageYOffset + timeEl[0].getBoundingClientRect().y;
       window.scrollTo({ top: timeElPositionY - window.innerHeight * 0.25, behavior: 'smooth' });
