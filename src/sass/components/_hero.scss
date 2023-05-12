@@ -15,7 +15,7 @@
 
 .time {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   font-size: 16px;
   line-height: 1;
@@ -26,6 +26,16 @@
   &::first-letter {
     margin-left: 30px;
     color: #cd201f;
+  }
+
+  &.active {
+    padding: 10px 0 10px 15px;
+    background-color: white;
+    border-radius: 5px;
+
+    &::first-letter {
+      margin-left: 20px;
+    }
   }
 }
 

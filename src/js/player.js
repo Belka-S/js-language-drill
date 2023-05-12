@@ -5,10 +5,7 @@ import TimeFormat from 'hh-mm-ss';
 import { refs } from './refs';
 
 // YouTube Player
-
 let player = null;
-let intervalId = null;
-let currentTime = null;
 
 export function createPlayer(e) {
   e.preventDefault();
@@ -29,12 +26,10 @@ export function createPlayer(e) {
     playerVars: { modestbranding: 1, enablejsapi: 1 },
   });
   // player.setPlaybackRate(0.75);
-
   player.loadVideoById({
     videoId: params.id,
     startSeconds: JSON.parse(localStorage.getItem('TIME')),
   });
-
   // Event Listener
   const listener = player.on('stateChange', e => {
     // Render Video Title
@@ -51,35 +46,46 @@ export function createPlayer(e) {
       player.off(listener);
     }
   });
-
-  //SetInterval  -->  // intervalId = setInterval(() => player.getCurrentTime().then(resp => console.log(TimeFormat.fromS(Math.round(resp), 'hh:mm:ss'))), 1000,);
-  intervalId = setInterval(async () => {
-    currentTime = TimeFormat.fromS(Math.round(await player.getCurrentTime()), 'hh:mm:ss');
-    console.log(currentTime); // Set class on SUB
-  }, 1000);
+  // Find Time-Element
+  onPlay();
 }
 
-async function playPause(e) {
+function playPause(e) {
   e.preventDefault();
 
   if (e.code === 'Space') {
     // Play / Pause
     player.getPlayerState().then(resp => (resp === 1 ? player.pauseVideo() : player.playVideo()));
-    // Add to LS Current Time
-    player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));
     // Set / Remove Interval
-    const resp = await player.getPlayerState();
-    if (resp === 1) {
-      clearInterval(intervalId);
-    } else {
-      intervalId = setInterval(async () => {
-        currentTime = TimeFormat.fromS(Math.round(await player.getCurrentTime()), 'hh:mm:ss');
-        console.log(currentTime); // set class on SUB
-      }, 1000);
-    }
+    player.getPlayerState().then(resp => (resp === 1 ? clearInterval(intervalId) : onPlay()));
   }
 
   if (e.code === 'MetaLeft') {
     player.getCurrentTime().then(resp => player.seekTo(resp - 10));
   }
+}
+
+async function onPlay() {
+  const timeElArray = Array.from(document.querySelectorAll('.time'));
+
+  const intervalId = setInterval(async () => {
+    const currentTime = TimeFormat.fromS(Math.round(await player.getCurrentTime()), 'hh:mm:ss');
+    // Find Time-Element
+    const timeEl = timeElArray.filter(el => el.textContent === currentTime);
+    if (timeEl[0]?.textContent === currentTime) {
+      timeEl[0].previousElementSibling.classList.remove('active');
+      timeEl[0].nextElementSibling.classList.add('active');
+      const timeElPositionY = window.pageYOffset + timeEl[0].getBoundingClientRect().y;
+      window.scrollTo({ top: timeElPositionY - window.innerHeight * 0.25, behavior: 'smooth' });
+    }
+    // Add to LS Current Time
+    player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));
+    // Stop at the End
+    const resp = await player.getPlayerState();
+    if (resp === 0) {
+      clearInterval(intervalId);
+      localStorage.setItem('TIME', 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, 1000);
 }
