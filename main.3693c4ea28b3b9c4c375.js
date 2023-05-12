@@ -174,7 +174,7 @@ function normalizeSub(sub) {
     var elSub = objectArray[i].sub;
     time += elTime;
     sentence += ' ' + elSub;
-    if ((elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) && sentence.length > 20) {
+    if ((elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) && sentence.length > 25) {
       joinSentences.push({
         time: time,
         sentence: sentence
