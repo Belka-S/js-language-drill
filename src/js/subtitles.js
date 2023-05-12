@@ -120,7 +120,7 @@ function normalizeSub(sub) {
 
     if (
       (elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) &&
-      sentence.length > 80
+      sentence.length > 20
     ) {
       joinSentences.push({ time, sentence });
       time = '';

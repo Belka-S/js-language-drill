@@ -89,11 +89,12 @@ async function onPlay() {
     // Find Time-Element
     const timeEl = timeElArray.filter(el => el.textContent === currentTime);
     if (timeEl[0]?.textContent === currentTime) {
-      // timeEl[0].previousElementSibling.classList.remove('active');
       timeElArray.forEach(el => el.previousElementSibling.classList.remove('active'));
-      timeEl[0].nextElementSibling.classList.add('active');
+      timeElArray.forEach(el => el.previousElementSibling.classList.remove('current'));
+      timeEl[0].previousElementSibling.classList.add('active');
+      timeEl[0].nextElementSibling.classList.add('current');
       const timeElPositionY = window.pageYOffset + timeEl[0].getBoundingClientRect().y;
-      window.scrollTo({ top: timeElPositionY - window.innerHeight * 0.25, behavior: 'smooth' });
+      window.scrollTo({ top: timeElPositionY - window.innerHeight * 0.4, behavior: 'smooth' });
     }
     // Add to LS Current Time
     player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));

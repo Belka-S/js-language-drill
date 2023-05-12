@@ -28,6 +28,13 @@
     color: #cd201f;
   }
 
+  &.current {
+    padding: 10px 0;
+    border-top: 1px solid tomato;
+    border-bottom: 1px solid tomato;
+    // background-color: tomato;
+  }
+
   &.active {
     padding: 10px 0 10px 15px;
     background-color: white;
