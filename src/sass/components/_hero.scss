@@ -10,14 +10,14 @@
 
     & #video-player {
       width: calc(45vw - 15px - 60px);
-
-      max-height: 41vh;
+      height: 45vh;
+      padding-top: 32px;
       padding-bottom: 15px;
       position: fixed;
       bottom: 0;
       left: 60px;
-
-      background-color: #e3e5ec;
+      // outline: 1px solid black;
+      background-image: linear-gradient(to bottom, transparent 0%, #e3e5ec80 3%, #e3e5ec 4%);
     }
 
     & .translation {
