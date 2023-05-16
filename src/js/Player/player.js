@@ -6,7 +6,7 @@ import { refs } from '../markup/refs';
 import { onKeyAction } from './keyActions';
 
 // Create YouTube Player
-let player = null;
+export let player = null;
 
 export function createPlayer(e) {
   e.preventDefault();
@@ -52,10 +52,12 @@ export function createPlayer(e) {
 }
 
 // Play Video
-async function onPlay() {
+export let intervalId = null;
+
+export async function onPlay() {
   const timeElArray = Array.from(document.querySelectorAll('.time'));
 
-  const intervalId = setInterval(async () => {
+  intervalId = setInterval(async () => {
     const currentTime = TimeFormat.fromS(Math.round(await player.getCurrentTime()), 'hh:mm:ss');
     // Find Time-Element
     const timeEl = timeElArray.filter(el => el.textContent === currentTime);

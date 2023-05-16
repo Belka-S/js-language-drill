@@ -1,3 +1,5 @@
+import { player, onPlay, intervalId } from './player';
+
 // On Key Action
 export function onKeyAction(e) {
   if (e.code === 'Space') {
