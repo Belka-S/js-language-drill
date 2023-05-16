@@ -79,7 +79,7 @@ export async function onPlay() {
       // Translate
       const prev = await translateText(timeEl[0].previousElementSibling.textContent);
       const curr = translateText(timeEl[0].nextElementSibling.textContent);
-      refs.translation.innerHTML = prev;
+      refs.translation.firstElementChild.innerHTML = prev;
     }
     // Add to LS Current Time
     player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));

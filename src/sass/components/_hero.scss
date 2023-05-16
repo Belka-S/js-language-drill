@@ -21,36 +21,41 @@
     }
 
     & .translation {
-      width: calc(45vw - 15px - 60px);
-      height: 20vh;
+      display: flex;
+      align-items: center;
+
+      width: calc(45vw - 15px - 60px - 20px);
+      height: 25vh;
       margin-bottom: 65px;
-      padding: 15px 15px 15px 30px;
+      padding: 15px 15px 15px 25px;
       position: fixed;
       bottom: 0;
-      left: 60px;
-      background-color: #555555;
+      left: calc(60px + 10px);
+      border-radius: 5px;
       background-image: linear-gradient(to top, #555555, #f4f4f4 60%);
-      font-size: 22px;
+      font-size: 21px;
       font-style: italic;
 
-      &::first-letter {
-        margin-left: 30px;
-        color: #cd201f;
+      & p {
+        &::first-letter {
+          margin-left: 30px;
+          color: #cd201f;
+        }
       }
     }
 
     & .sub-output {
       margin-top: 60px;
 
+      font-size: 24px;
+
       & h2 {
         font-size: 28px;
       }
 
-      font-size: 24px;
-    }
-
-    & p:last-of-type {
-      margin-bottom: 50vh;
+      & p:last-of-type {
+        margin-bottom: 50vh;
+      }
     }
   }
 }
