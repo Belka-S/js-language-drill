@@ -72,7 +72,8 @@ export async function onPlay() {
       const timeElPositionY =
         window.pageYOffset +
         timeEl[0].previousElementSibling.getBoundingClientRect().y -
-        window.innerHeight * 0.15;
+        timeEl[0].getBoundingClientRect().height -
+        document.querySelector('.header').getBoundingClientRect().height;
 
       window.scrollTo({ top: timeElPositionY, behavior: 'smooth' });
 
