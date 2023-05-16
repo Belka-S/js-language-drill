@@ -2,21 +2,22 @@ import YouTubePlayer from 'youtube-player';
 import urlParser from 'js-video-url-parser';
 import TimeFormat from 'hh-mm-ss';
 
-import { refs } from './refs';
+import { refs } from '../markup/refs';
+import { onKeyAction } from './keyActions';
 
-// YouTube Player
+// Create YouTube Player
 let player = null;
 
 export function createPlayer(e) {
   e.preventDefault();
 
-  addEventListener('keydown', getKeyAction);
+  addEventListener('keydown', onKeyAction);
 
   const prevPlayer = document.querySelector('iframe#video-player');
   if (prevPlayer) {
     prevPlayer.insertAdjacentHTML('afterend', '<div id="video-player"></div>');
     prevPlayer.remove();
-    removeEventListener('keydown', getKeyAction);
+    removeEventListener('keydown', onKeyAction);
   }
 
   const videoUrl = refs.urlInput.value;
@@ -50,37 +51,7 @@ export function createPlayer(e) {
   onPlay();
 }
 
-// Get Key Action
-function getKeyAction(e) {
-  if (e.code === 'Space') {
-    e.preventDefault();
-    // Play/Pause
-    player.getPlayerState().then(resp => (resp === 1 ? player.pauseVideo() : player.playVideo()));
-    // Set / Remove Interval
-    player.getPlayerState().then(resp => (resp === 1 ? clearInterval(intervalId) : onPlay()));
-  }
-  // Rewind Back
-  if (e.code === 'ArrowLeft') {
-    e.preventDefault();
-    player.getCurrentTime().then(resp => player.seekTo(resp - 10));
-  }
-  // Rewind Forward
-  if (e.code === 'ArrowRight') {
-    e.preventDefault();
-    player.getCurrentTime().then(resp => player.seekTo(resp + 10));
-  }
-  // Scroll to the Beginning
-  if (e.code === 'ArrowUp') {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-  // Scroll PageDown
-  if (e.code === 'ArrowDown') {
-    e.preventDefault();
-    window.scrollTo({ top: window.pageYOffset + window.innerHeight, behavior: 'smooth' });
-  }
-}
-
+// Play Video
 async function onPlay() {
   const timeElArray = Array.from(document.querySelectorAll('.time'));
 
@@ -107,3 +78,5 @@ async function onPlay() {
     }
   }, 1000);
 }
+
+// const API_KEY = 'AIzaSyBdzGNN7qo1CLDjDUXKYiZZXWqJ21YcmxA';

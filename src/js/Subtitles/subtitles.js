@@ -1,6 +1,7 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-import { refs } from './refs';
+import { refs } from '../markup/refs';
+import { notifyWrongSub } from './notifications';
 
 // Get Subtitles from Url
 export function getSub(e) {
@@ -31,9 +32,8 @@ export function uploadSub(e) {
 
   const reader = new FileReader();
   const fileObj = e.target.files[0];
-  fileObj.size > 100000 ? wrongSubtitles() : reader.readAsText(fileObj, 'utf-8');
-
-  // Uploading sub.TXT
+  fileObj.size > 100000 ? notifyWrongSub() : reader.readAsText(fileObj, 'utf-8');
+  // sub.TXT
   if (fileObj.type === 'text/plain') {
     reader.onload = () => {
       localStorage.setItem('SUB', JSON.stringify([e.target.files[0].name, reader.result]));
@@ -50,8 +50,7 @@ export function uploadSub(e) {
 
     refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
   }
-
-  // Uploading sub.SRT
+  // sub.SRT
   if (fileObj.type !== 'text/plain') {
     reader.onload = () => {
       const srtArray = normalizeSub(reader.result);
@@ -75,32 +74,6 @@ export function uploadSub(e) {
     refs.subInput.nextElementSibling.textContent = e.target.files[0].name;
   }
 }
-
-// Nitification Sub
-function wrongSubtitles() {
-  const message = 'Ooops... Seems to wrong SUB!';
-  const options = { position: 'center-center', timeout: 3000 };
-  return Notify.failure(message, options);
-}
-
-// Subtitles Input Label
-export function fillSubLabel(e) {
-  const labelEl = e.target.nextElementSibling;
-  labelEl.textContent = '.';
-  for (let i = 0; i <= 10; i += 1) {
-    const timer = setTimeout(() => {
-      labelEl.insertAdjacentHTML('afterbegin', '.');
-      i === 10 && clearInterval(timer);
-    }, i * 150);
-  }
-
-  setTimeout(() => {
-    labelEl.textContent = 'Upload SUB...';
-    e.target.blur();
-  }, 1550);
-}
-
-export const cleanUrlLabel = e => (e.target.value = '');
 
 // Normalize SUB
 function normalizeSub(sub) {
