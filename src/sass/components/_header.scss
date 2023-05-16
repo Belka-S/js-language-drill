@@ -35,7 +35,7 @@
   &__url {
     @extend %input;
 
-    width: 28%;
+    width: 32%;
 
     &::placeholder {
       color: #414141;
@@ -51,7 +51,7 @@
   &__sub-label {
     @extend %input;
 
-    width: 45%;
+    width: 43%;
     cursor: pointer;
   }
   // Play icon

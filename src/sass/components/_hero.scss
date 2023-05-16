@@ -2,7 +2,14 @@
   display: flex;
 
   & .sidebar {
+    padding-top: 50px;
+    padding-left: 50px;
     width: 50%;
+
+    & ol {
+      position: sticky;
+      top: 50px;
+    }
   }
 
   & .video-sub {
@@ -17,7 +24,7 @@
       bottom: 0;
       left: 60px;
       // outline: 1px solid black;
-      background-image: linear-gradient(to bottom, transparent 0%, #e3e5ec80 3%, #e3e5ec 4%);
+      background-image: linear-gradient(to bottom, transparent 0%, #e3e5ec80 1%, #e3e5ec 4.5%);
     }
 
     & .translation {
