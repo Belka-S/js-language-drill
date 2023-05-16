@@ -4,6 +4,7 @@ import TimeFormat from 'hh-mm-ss';
 
 import { refs } from '../markup/refs';
 import { onKeyAction } from './keyActions';
+import { translateText } from '../Subtitles/translation';
 
 // Create YouTube Player
 export let player = null;
@@ -74,6 +75,11 @@ export async function onPlay() {
         window.innerHeight * 0.15;
 
       window.scrollTo({ top: timeElPositionY, behavior: 'smooth' });
+
+      // Translate
+      const prev = await translateText(timeEl[0].previousElementSibling.textContent);
+      const curr = translateText(timeEl[0].nextElementSibling.textContent);
+      refs.translation.innerHTML = prev;
     }
     // Add to LS Current Time
     player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));

@@ -1,4 +1,5 @@
 import { player, onPlay, intervalId } from './player';
+import { refs } from '../markup/refs';
 
 // On Key Action
 export function onKeyAction(e) {
@@ -8,6 +9,14 @@ export function onKeyAction(e) {
     player.getPlayerState().then(resp => (resp === 1 ? player.pauseVideo() : player.playVideo()));
     // Set / Remove Interval
     player.getPlayerState().then(resp => (resp === 1 ? clearInterval(intervalId) : onPlay()));
+    // Show/Hide translationEl
+    player
+      .getPlayerState()
+      .then(resp =>
+        resp === 1
+          ? refs.translation.classList.remove('is-hidden')
+          : refs.translation.classList.add('is-hidden'),
+      );
   }
   // Rewind Back
   if (e.code === 'ArrowLeft') {
