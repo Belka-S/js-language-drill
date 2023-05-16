@@ -384,7 +384,7 @@ function _onPlay() {
                   });
                   timeEl[0].previousElementSibling.classList.add('active');
                   timeEl[0].nextElementSibling.classList.add('current');
-                  timeElPositionY = window.pageYOffset + timeEl[0].previousElementSibling.getBoundingClientRect().y - window.innerHeight * 0.15;
+                  timeElPositionY = window.pageYOffset + timeEl[0].previousElementSibling.getBoundingClientRect().y - timeEl[0].getBoundingClientRect().height - document.querySelector('.header').getBoundingClientRect().height;
                   window.scrollTo({
                     top: timeElPositionY,
                     behavior: 'smooth'
