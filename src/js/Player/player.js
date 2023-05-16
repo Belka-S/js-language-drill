@@ -31,7 +31,8 @@ export function createPlayer(e) {
     videoId: params.id,
     startSeconds: JSON.parse(localStorage.getItem('TIME')),
   });
-  // Event Listener
+
+  // Set Event Listener
   const listener = player.on('stateChange', e => {
     // Render Video Title
     if (e.target.videoTitle && e.data === 1) {
@@ -66,8 +67,13 @@ export async function onPlay() {
       timeElArray.forEach(el => el.previousElementSibling.classList.remove('current'));
       timeEl[0].previousElementSibling.classList.add('active');
       timeEl[0].nextElementSibling.classList.add('current');
-      const timeElPositionY = window.pageYOffset + timeEl[0].getBoundingClientRect().y;
-      window.scrollTo({ top: timeElPositionY - window.innerHeight * 0.4, behavior: 'smooth' });
+
+      const timeElPositionY =
+        window.pageYOffset +
+        timeEl[0].previousElementSibling.getBoundingClientRect().y -
+        window.innerHeight * 0.15;
+
+      window.scrollTo({ top: timeElPositionY, behavior: 'smooth' });
     }
     // Add to LS Current Time
     player.getCurrentTime().then(resp => localStorage.setItem('TIME', JSON.stringify(resp)));
