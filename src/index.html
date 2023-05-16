@@ -11,14 +11,16 @@
 <body>
   <!-- Header -->
   <section class="header container">
-    <div class="header__wrap">
-      <form class="upload">
+    <form class="upload">
+      <div class="upload__wrap upload__wrap--url">
         <a class="youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer nofollow">
           <svg width="76" height="32">
             <use xlink:href="#youtube"></use>
           </svg>
         </a>
         <input class="upload__url " type="input" name="video-url" id="video-url" placeholder="Insert URL...">
+      </div>
+      <div class="upload__wrap upload__wrap--sub">
         <input class="upload__sub visually-hidden" type="file" name="sub-file" id="sub-file">
         <label class="upload__sub-label" for="sub-file">Upload SUB...</label>
         <button class="upload__btn" type="submit">
@@ -26,8 +28,8 @@
             <use xlink:href="#play"></use>
           </svg>
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
   </section>
   <main>
     <!-- Hero -->
