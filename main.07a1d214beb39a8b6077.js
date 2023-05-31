@@ -268,9 +268,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Translation
 index_min/* default.engine */.Z.engine = 'google'; // "google", "yandex", "libre", "deepl"
 
-var language = refs.langSelect.value;
 var translateText = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(text) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(text, language) {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -287,7 +286,7 @@ var translateText = /*#__PURE__*/function () {
       }
     }, _callee);
   }));
-  return function translateText(_x) {
+  return function translateText(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -362,7 +361,7 @@ function _onPlay() {
           timeElArray = Array.from(document.querySelectorAll('.time'));
           intervalId = setInterval( /*#__PURE__*/player_asyncToGenerator( /*#__PURE__*/player_regeneratorRuntime().mark(function _callee() {
             var _timeEl$;
-            var currentTime, timeEl, timeElPositionY, prev, curr, resp;
+            var currentTime, timeEl, timeElPositionY, language, prev, resp;
             return player_regeneratorRuntime().wrap(function _callee$(_context) {
               while (1) switch (_context.prev = _context.next) {
                 case 0:
@@ -397,11 +396,12 @@ function _onPlay() {
                   });
 
                   // Translate
-                  _context.next = 17;
-                  return translateText(timeEl[0].previousElementSibling.textContent);
-                case 17:
+                  language = refs.langSelect.value;
+                  _context.next = 18;
+                  return translateText(timeEl[0].previousElementSibling.textContent, language);
+                case 18:
                   prev = _context.sent;
-                  curr = translateText(timeEl[0].nextElementSibling.textContent);
+                  // const curr = translateText(timeEl[0].nextElementSibling.textContent, language);
                   refs.translation.firstElementChild.innerHTML = prev;
                 case 20:
                   // Add to LS Current Time
