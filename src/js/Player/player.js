@@ -78,8 +78,9 @@ export async function onPlay() {
       window.scrollTo({ top: timeElPositionY, behavior: 'smooth' });
 
       // Translate
-      const prev = await translateText(timeEl[0].previousElementSibling.textContent);
-      const curr = translateText(timeEl[0].nextElementSibling.textContent);
+      const language = refs.langSelect.value;
+      const prev = await translateText(timeEl[0].previousElementSibling.textContent, language);
+      // const curr = translateText(timeEl[0].nextElementSibling.textContent, language);
       refs.translation.firstElementChild.innerHTML = prev;
     }
     // Add to LS Current Time
