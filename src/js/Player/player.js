@@ -89,7 +89,7 @@ export async function onPlay() {
     if (resp === 0) {
       clearInterval(intervalId);
       localStorage.setItem('TIME', 0);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, 1000);
 }

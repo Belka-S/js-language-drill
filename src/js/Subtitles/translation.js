@@ -1,6 +1,9 @@
 import translate from 'translate';
+import { refs } from '../markup/refs';
 
 // Translation
 translate.engine = 'google'; // "google", "yandex", "libre", "deepl"
 
-export const translateText = async text => await translate(`${text}`, 'uk');
+const language = refs.langSelect.value;
+
+export const translateText = async text => await translate(`${text}`, { from: language, to: 'uk' });

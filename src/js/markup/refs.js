@@ -5,4 +5,5 @@ export const refs = {
   subOutput: document.querySelector('div.sub-output'),
   translation: document.querySelector('.translation'),
   videoPlayer: document.querySelector('#video-player'),
+  langSelect: document.querySelector('#language'),
 };
