@@ -43,7 +43,8 @@ var refs = {
   subInput: document.querySelector('#sub-file'),
   subOutput: document.querySelector('div.sub-output'),
   translation: document.querySelector('.translation'),
-  videoPlayer: document.querySelector('#video-player')
+  videoPlayer: document.querySelector('#video-player'),
+  langSelect: document.querySelector('#language')
 };
 // EXTERNAL MODULE: ./node_modules/notiflix/build/notiflix-notify-aio.js
 var notiflix_notify_aio = __webpack_require__(678);
@@ -263,16 +264,21 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
+
 // Translation
 index_min/* default.engine */.Z.engine = 'google'; // "google", "yandex", "libre", "deepl"
 
+var language = refs.langSelect.value;
 var translateText = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(text) {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return (0,index_min/* default */.Z)("".concat(text), 'uk');
+          return (0,index_min/* default */.Z)("".concat(text), {
+            from: language,
+            to: 'uk'
+          });
         case 2:
           return _context.abrupt("return", _context.sent);
         case 3:
@@ -410,10 +416,7 @@ function _onPlay() {
                   if (resp === 0) {
                     clearInterval(intervalId);
                     localStorage.setItem('TIME', 0);
-                    window.scrollTo({
-                      top: 0,
-                      behavior: 'smooth'
-                    });
+                    // window.scrollTo({ top: 0, behavior: 'smooth' });
                   }
                 case 25:
                 case "end":
