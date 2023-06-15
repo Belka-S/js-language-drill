@@ -1,5 +1,3 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
 import { refs } from '../markup/refs';
 import { notifyWrongSub } from './notifications';
 
@@ -32,7 +30,7 @@ export function uploadSub(e) {
 
   const reader = new FileReader();
   const fileObj = e.target.files[0];
-  fileObj.size > 100000 ? notifyWrongSub() : reader.readAsText(fileObj, 'utf-8');
+  fileObj.size > 1000000 ? notifyWrongSub() : reader.readAsText(fileObj, 'utf-8');
   // sub.TXT
   if (fileObj.type === 'text/plain') {
     reader.onload = () => {
@@ -77,7 +75,7 @@ export function uploadSub(e) {
 
 // Normalize SUB
 function normalizeSub(sub) {
-  const splitReplace = sub.split('\n\n').map((el, i) => el.replace(`${i + 1}\n`, ''));
+  const splitReplace = sub.split('\n\n').map((el, i) => el.trim().replace(`${i + 1}\n`, ''));
   const removeEndTime = splitReplace.map(el => el.replace(el.substring(8, 30), ' '));
   const objectArray = removeEndTime.map(el => ({ time: el.substring(0, 8), sub: el.substring(9) }));
 
@@ -92,8 +90,10 @@ function normalizeSub(sub) {
     sentence += ' ' + elSub;
 
     if (
-      (elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) &&
-      sentence.length > 25
+      elSub.endsWith('.') ||
+      elSub.endsWith('?') ||
+      elSub.endsWith('!') ||
+      sentence.length > 150
     ) {
       joinSentences.push({ time, sentence });
       time = '';
