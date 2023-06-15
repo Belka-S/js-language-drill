@@ -46,8 +46,6 @@ var refs = {
   videoPlayer: document.querySelector('#video-player'),
   langSelect: document.querySelector('#language')
 };
-// EXTERNAL MODULE: ./node_modules/notiflix/build/notiflix-notify-aio.js
-var notiflix_notify_aio = __webpack_require__(678);
 ;// CONCATENATED MODULE: ./src/js/Subtitles/notifications.js
 // Notify Wrong Sub
 function notifyWrongSub() {
@@ -59,7 +57,6 @@ function notifyWrongSub() {
   return Notify.failure(message, options);
 }
 ;// CONCATENATED MODULE: ./src/js/Subtitles/subtitles.js
-
 
 
 
@@ -90,7 +87,7 @@ function uploadSub(e) {
   refs.subOutput.innerHTML = '';
   var reader = new FileReader();
   var fileObj = e.target.files[0];
-  fileObj.size > 100000 ? notifyWrongSub() : reader.readAsText(fileObj, 'utf-8');
+  fileObj.size > 1000000 ? notifyWrongSub() : reader.readAsText(fileObj, 'utf-8');
   // sub.TXT
   if (fileObj.type === 'text/plain') {
     reader.onload = function () {
@@ -134,7 +131,7 @@ function uploadSub(e) {
 // Normalize SUB
 function normalizeSub(sub) {
   var splitReplace = sub.split('\n\n').map(function (el, i) {
-    return el.replace("".concat(i + 1, "\n"), '');
+    return el.trim().replace("".concat(i + 1, "\n"), '');
   });
   var removeEndTime = splitReplace.map(function (el) {
     return el.replace(el.substring(8, 30), ' ');
@@ -153,7 +150,7 @@ function normalizeSub(sub) {
     var elSub = objectArray[i].sub;
     time += elTime;
     sentence += ' ' + elSub;
-    if ((elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!')) && sentence.length > 25) {
+    if (elSub.endsWith('.') || elSub.endsWith('?') || elSub.endsWith('!') || sentence.length > 150) {
       joinSentences.push({
         time: time,
         sentence: sentence
