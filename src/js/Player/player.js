@@ -66,8 +66,8 @@ export async function onPlay() {
     if (timeEl[0]?.textContent === currentTime) {
       timeElArray.forEach(el => el.previousElementSibling.classList.remove('active'));
       timeElArray.forEach(el => el.previousElementSibling.classList.remove('current'));
-      timeEl[0].previousElementSibling.classList.add('active');
-      timeEl[0].nextElementSibling.classList.add('current');
+      timeEl[0].previousElementSibling.classList.add('current');
+      timeEl[0].nextElementSibling.classList.add('active');
 
       const timeElPositionY =
         window.pageYOffset +
@@ -79,7 +79,7 @@ export async function onPlay() {
 
       // Translate
       const language = refs.langSelect.value;
-      const prev = await translateText(timeEl[0].previousElementSibling.textContent, language);
+      const prev = await translateText(timeEl[0].nextElementSibling.textContent, language);
       // const curr = translateText(timeEl[0].nextElementSibling.textContent, language);
       refs.translation.firstElementChild.innerHTML = prev;
     }
