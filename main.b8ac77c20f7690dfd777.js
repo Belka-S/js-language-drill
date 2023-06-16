@@ -384,8 +384,8 @@ function _onPlay() {
                   timeElArray.forEach(function (el) {
                     return el.previousElementSibling.classList.remove('current');
                   });
-                  timeEl[0].previousElementSibling.classList.add('active');
-                  timeEl[0].nextElementSibling.classList.add('current');
+                  timeEl[0].previousElementSibling.classList.add('current');
+                  timeEl[0].nextElementSibling.classList.add('active');
                   timeElPositionY = window.pageYOffset + timeEl[0].previousElementSibling.getBoundingClientRect().y - timeEl[0].getBoundingClientRect().height - document.querySelector('.header').getBoundingClientRect().height;
                   window.scrollTo({
                     top: timeElPositionY,
@@ -395,7 +395,7 @@ function _onPlay() {
                   // Translate
                   language = refs.langSelect.value;
                   _context.next = 18;
-                  return translateText(timeEl[0].previousElementSibling.textContent, language);
+                  return translateText(timeEl[0].nextElementSibling.textContent, language);
                 case 18:
                   prev = _context.sent;
                   // const curr = translateText(timeEl[0].nextElementSibling.textContent, language);
