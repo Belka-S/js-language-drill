@@ -1,17 +1,6 @@
 .hero__wrap {
   display: flex;
 
-  & .sidebar {
-    margin-top: 50px;
-    margin-left: 70px;
-    width: 50%;
-
-    & ol {
-      position: sticky;
-      top: 50px;
-    }
-  }
-
   & .video-sub {
     width: calc(45% - 15px);
 

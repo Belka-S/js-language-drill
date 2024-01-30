@@ -78,7 +78,7 @@ export async function onPlay() {
       window.scrollTo({ top: timeElPositionY, behavior: 'smooth' });
 
       // Translate
-      const language = refs.langSelect.value;
+      const language = 'en';
       const prev = await translateText(timeEl[0].nextElementSibling.textContent, language);
       // const curr = translateText(timeEl[0].nextElementSibling.textContent, language);
       refs.translation.firstElementChild.innerHTML = prev;
