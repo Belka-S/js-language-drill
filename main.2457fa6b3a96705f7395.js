@@ -393,7 +393,7 @@ function _onPlay() {
                   });
 
                   // Translate
-                  language = refs.langSelect.value;
+                  language = 'en';
                   _context.next = 18;
                   return translateText(timeEl[0].nextElementSibling.textContent, language);
                 case 18:
